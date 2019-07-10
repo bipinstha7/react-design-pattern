@@ -4,6 +4,7 @@ import './App.css';
 class App extends Component {
 	state = {
 		count: 0,
+		tags: ['tag1', 'tag2', 'tag3'],
 	};
 
 	formatCount() {
@@ -18,13 +19,12 @@ class App extends Component {
 		return classes;
 	}
 
+	handleIncrement = step => {
+		this.setState({ count: this.state.count + step });
+	};
+
 	render() {
-		return (
-			<div className="App">
-				<span className={this.getBadgeClasses()}>{this.formatCount()}</span>
-				<button className="btn btn-secondary btn-sm">Increment</button>
-			</div>
-		);
+		return <main className="container" />;
 	}
 }
 
