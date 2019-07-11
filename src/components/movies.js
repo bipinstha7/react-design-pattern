@@ -18,15 +18,21 @@ class Movies extends Component {
 		this.setState({ movies });
 	};
 
-	handleLike = movieId => {
-		const likeMovie = this.state.movies.map(movie => {
-			if (movie._id === movieId) {
-				movie.liked = true;
-			}
+	handleLike = movie => {
+		// const likeMovie = this.state.movies.map(movie => {
+		// 	if (movie._id === movieId) {
+		// 		movie.liked = true;
+		// 	}
+		// 	return movie;
+		// });
+		// this.setState({ movies: likeMovie });
 
-			return movie;
-		});
-		this.setState({ movies: likeMovie });
+		const movies = [...this.state.movies];
+		const index = movies.indexOf(movie);
+		movies[index] = { ...movies[index] };
+		movies[index].liked = !movies[index].liked;
+
+		this.setState({ movies });
 	};
 
 	render() {
@@ -57,7 +63,7 @@ class Movies extends Component {
 								<td>
 									<Like
 										liked={movie.liked}
-										onClick={() => this.handleLike(movie._id)}
+										onClick={() => this.handleLike(movie)}
 									/>
 								</td>
 								<td>
