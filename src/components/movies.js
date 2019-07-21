@@ -8,6 +8,7 @@ class Movies extends Component {
 	};
 
 	componentDidMount() {
+		// getMovies behaves like the database
 		const movies = getMovies();
 		this.setState({ movies });
 	}
