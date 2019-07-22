@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Like from './like';
 import get from 'lodash/get';
 
 class TableBody extends Component {
