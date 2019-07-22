@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getMovies } from '../services/fakeMovieService';
 import { getGenres } from '../services/fakeGenreService';
+import orderBy from 'lodash/orderBy';
 
 import Pagination from './common/pagination';
 import ListGroup from './common/listGroup';
@@ -12,12 +13,16 @@ class Movies extends Component {
 		movies: [],
 		genres: [],
 		selectedGenre: '',
+		sortColumn: {
+			path: 'title',
+			order: 'asc',
+		},
 		pageSize: 4,
 		currentPage: 1,
 	};
 
 	componentDidMount() {
-		const genres = [{ name: 'All Genres' }, ...getGenres()];
+		const genres = [{ _id: '', name: 'All Genres' }, ...getGenres()];
 
 		// getMovies behaves like the database
 		this.setState({ movies: getMovies(), genres });
@@ -58,15 +63,41 @@ class Movies extends Component {
 		// );
 	};
 
+	handleSort = path => {
+		const sortColumn = { ...this.state.sortColumn };
+
+		if (sortColumn.path === path) {
+			sortColumn.order = sortColumn.order === 'asc' ? 'desc' : 'asc';
+		} else {
+			sortColumn.path = path;
+			sortColumn.order = 'asc';
+		}
+		this.setState({ sortColumn });
+	};
+
 	render() {
 		const { length: totalMovies } = this.state.movies;
-		const { pageSize, currentPage, movies, genres, selectedGenre } = this.state;
+		const {
+			pageSize,
+			currentPage,
+			movies,
+			genres,
+			selectedGenre,
+			sortColumn,
+		} = this.state;
 
 		const filteredMovies =
 			selectedGenre && selectedGenre._id
 				? movies.filter(movie => movie.genre._id === selectedGenre._id)
 				: movies;
-		const paginateMovies = paginate(filteredMovies, currentPage, pageSize);
+
+		const sortedMovies = orderBy(
+			filteredMovies,
+			[sortColumn.path],
+			[sortColumn.order]
+		);
+
+		const paginateMovies = paginate(sortedMovies, currentPage, pageSize);
 
 		if (!totalMovies) return <p>There are no movies in the database</p>;
 		return (
@@ -86,6 +117,7 @@ class Movies extends Component {
 						movies={paginateMovies}
 						onLike={this.handleLike}
 						onDelete={this.handleDelete}
+						onSort={this.handleSort}
 					/>
 					<Pagination
 						totalMovies={filteredMovies.length}
