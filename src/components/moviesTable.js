@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import TableHeader from './common/tableHeader';
-import TableBody from './common/tableBody';
 import Like from './common/like';
+import Table from './common/table';
 
 class MoviesTable extends Component {
 	// columns doesn't need to be changed based on
@@ -32,22 +31,15 @@ class MoviesTable extends Component {
 	];
 
 	render() {
-		const { movies, onLike, onDelete, sortColumn, onSort } = this.props;
+		const { movies, sortColumn, onSort } = this.props;
 
 		return (
-			<table className="table">
-				<TableHeader
-					columns={this.columns}
-					sortColumn={sortColumn}
-					onSort={onSort}
-				/>
-				<TableBody
-					data={movies}
-					columns={this.columns}
-					onLike={onLike}
-					onDelete={onDelete}
-				/>
-			</table>
+			<Table
+				data={movies}
+				sortColumn={sortColumn}
+				onSort={onSort}
+				columns={this.columns}
+			/>
 		);
 	}
 }
