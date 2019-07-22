@@ -7,6 +7,7 @@ class Movies extends Component {
 	state = {
 		movies: [],
 		pageSize: 4,
+		currentPage: 1,
 	};
 
 	componentDidMount() {
@@ -39,11 +40,12 @@ class Movies extends Component {
 	};
 
 	handlePageChange = page => {
-		console.log('page', page);
+		this.setState({ currentPage: page });
 	};
 
 	render() {
 		const { length: totalMovies } = this.state.movies;
+		const { pageSize, currentPage } = this.state;
 
 		if (!totalMovies) return <p>There are no movies in the database</p>;
 		return (
@@ -87,7 +89,8 @@ class Movies extends Component {
 				</table>
 				<Pagination
 					totalMovies={totalMovies}
-					pageSize={this.state.pageSize}
+					pageSize={pageSize}
+					currentPage={currentPage}
 					onPageChange={this.handlePageChange}
 				/>
 			</React.Fragment>
