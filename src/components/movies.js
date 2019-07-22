@@ -16,8 +16,10 @@ class Movies extends Component {
 	};
 
 	componentDidMount() {
+		const genres = [{ name: 'All Genres' }, ...getGenres()];
+
 		// getMovies behaves like the database
-		this.setState({ movies: getMovies(), genres: getGenres() });
+		this.setState({ movies: getMovies(), genres });
 	}
 
 	handleDelete = movieId => {
@@ -48,7 +50,7 @@ class Movies extends Component {
 	};
 
 	handleGenreSelect = genre => {
-		this.setState({ selectedGenre: genre });
+		this.setState({ selectedGenre: genre, currentPage: 1 });
 
 		// const filterMovies = this.state.movies.filter(
 		// 	movie => movie.genre._id !== genre._id
@@ -59,9 +61,10 @@ class Movies extends Component {
 		const { length: totalMovies } = this.state.movies;
 		const { pageSize, currentPage, movies, genres, selectedGenre } = this.state;
 
-		const filteredMovies = selectedGenre
-			? movies.filter(movie => movie.genre._id === selectedGenre._id)
-			: movies;
+		const filteredMovies =
+			selectedGenre && selectedGenre._id
+				? movies.filter(movie => movie.genre._id === selectedGenre._id)
+				: movies;
 		const paginateMovies = paginate(filteredMovies, currentPage, pageSize);
 
 		if (!totalMovies) return <p>There are no movies in the database</p>;
