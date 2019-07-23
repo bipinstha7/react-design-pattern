@@ -99,7 +99,6 @@ class Movies extends Component {
 		const {
 			pageSize,
 			currentPage,
-			movies,
 			genres,
 			selectedGenre,
 			sortColumn,
