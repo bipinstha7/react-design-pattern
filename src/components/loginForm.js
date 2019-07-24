@@ -28,6 +28,7 @@ class LoginForm extends Form {
 	render() {
 		return (
 			<Fragment>
+				<h1>Login</h1>
 				<form onSubmit={this.handleSubmit}>
 					{this.renderInput('username', 'Username')}
 					{this.renderInput('password', 'Password', 'password')}
