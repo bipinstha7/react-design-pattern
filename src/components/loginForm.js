@@ -2,10 +2,11 @@ import React, { Component, Fragment } from 'react';
 import Joi from 'joi-browser';
 
 import Input from './common/input';
+import Form from './common/form';
 
-class LoginForm extends Component {
+class LoginForm extends Form {
 	state = {
-		account: {
+		data: {
 			username: '',
 			password: '',
 		},
@@ -21,55 +22,12 @@ class LoginForm extends Component {
 			.label('Password'),
 	};
 
-	handleSubmit = e => {
-		e.preventDefault();
-
-		const errors = this.validate();
-		this.setState({ errors: errors || {} });
-		if (errors) return;
-	};
-
-	validate = () => {
-		const { error } = Joi.validate(this.state.account, this.schema, {
-			abortEarly: false,
-		});
-
-		if (!error) return null;
-
-		const errors = {};
-		error.details.map(error => {
-			errors[error.path[0]] = error.message;
-		});
-
-		return errors;
-	};
-
-	handleChange = ({ target }) => {
-		const errors = { ...this.state.errors };
-		const errorMessage = this.validateProperty(target);
-
-		if (errorMessage) {
-			errors[target.name] = errorMessage;
-		} else {
-			delete errors[target.name];
-		}
-
-		const account = { ...this.state.account };
-		account[target.name] = target.value;
-		this.setState({ account, errors });
-	};
-
-	validateProperty = ({ name, value }) => {
-		const obj = { [name]: value };
-		const schema = { [name]: this.schema[name] };
-
-		const { error } = Joi.validate(obj, schema);
-
-		return error ? error.details[0].message : null;
+	doSubmit = () => {
+		console.log('submitted');
 	};
 
 	render() {
-		const { account, errors } = this.state;
+		const { data, errors } = this.state;
 
 		return (
 			<Fragment>
@@ -77,14 +35,14 @@ class LoginForm extends Component {
 					<Input
 						name="username"
 						label="Username"
-						value={account.username}
+						value={data.username}
 						onChange={this.handleChange}
 						error={errors.username}
 					/>
 					<Input
 						name="password"
 						label="Password"
-						value={account.password}
+						value={data.password}
 						onChange={this.handleChange}
 						error={errors.password}
 					/>
