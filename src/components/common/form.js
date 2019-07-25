@@ -17,9 +17,7 @@ class Form extends Component {
 		if (!error) return null;
 
 		const errors = {};
-		error.details.map(error => {
-			errors[error.path[0]] = error.message;
-		});
+		error.details.map(error => (errors[error.path[0]] = error.message));
 
 		return errors;
 	};
