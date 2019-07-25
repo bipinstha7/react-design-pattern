@@ -7,17 +7,19 @@ import { Link } from 'react-router-dom';
 import Pagination from './common/pagination';
 import ListGroup from './common/listGroup';
 import MoviesTable from './moviesTable';
+import SearchBox from './common/searchBox';
 import { paginate } from '../utils/paginate';
 
 class Movies extends Component {
 	state = {
 		movies: [],
 		genres: [],
-		selectedGenre: '',
+		selectedGenre: null,
 		sortColumn: {
 			path: 'title',
 			order: 'asc',
 		},
+		searchQuery: '',
 		pageSize: 4,
 		currentPage: 1,
 	};
@@ -57,7 +59,7 @@ class Movies extends Component {
 	};
 
 	handleGenreSelect = genre => {
-		this.setState({ selectedGenre: genre, currentPage: 1 });
+		this.setState({ selectedGenre: genre, searchQuery: '', currentPage: 1 });
 
 		// const filterMovies = this.state.movies.filter(
 		// 	movie => movie.genre._id !== genre._id
@@ -68,6 +70,10 @@ class Movies extends Component {
 		this.setState({ sortColumn });
 	};
 
+	handleSearch = query => {
+		this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
+	};
+
 	getPageData = () => {
 		const {
 			pageSize,
@@ -75,12 +81,20 @@ class Movies extends Component {
 			movies,
 			selectedGenre,
 			sortColumn,
+			searchQuery,
 		} = this.state;
 
-		const filteredMovies =
-			selectedGenre && selectedGenre._id
-				? movies.filter(movie => movie.genre._id === selectedGenre._id)
-				: movies;
+		let filteredMovies = movies;
+
+		if (searchQuery) {
+			filteredMovies = movies.filter(movie =>
+				movie.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+			);
+		} else if (selectedGenre && selectedGenre._id) {
+			filteredMovies = movies.filter(
+				movie => movie.genre._id === selectedGenre._id
+			);
+		}
 
 		const sortedMovies = orderBy(
 			filteredMovies,
@@ -103,6 +117,7 @@ class Movies extends Component {
 			genres,
 			selectedGenre,
 			sortColumn,
+			searchQuery,
 		} = this.state;
 
 		const { totalMovies, data } = this.getPageData();
@@ -128,6 +143,7 @@ class Movies extends Component {
 						New Movie
 					</Link>
 					<p>Showing {totalMovies} movies in the database</p>
+					<SearchBox value={searchQuery} onChange={this.handleSearch} />
 					<MoviesTable
 						movies={data}
 						onLike={this.handleLike}
